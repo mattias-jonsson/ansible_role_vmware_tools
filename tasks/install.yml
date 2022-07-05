@@ -1,0 +1,70 @@
+---
+
+- name: check if VMware Tools is installed
+  become: true
+  ansible.windows.win_stat:
+    path: '%ProgramFiles%\VMware\VMware Tools\VMwareToolboxCmd.exe'
+  register: vmwaretoolbox
+
+- name: check version of vmware tools
+  become: true
+  ansible.windows.win_command: .\VMwareToolboxCmd.exe -v
+  args:
+    chdir: '%ProgramFiles%\VMware\VMware Tools'
+  register: vmwaretoolboxversionstring
+  changed_when: false
+  when: vmwaretoolbox.stat.exists
+
+- name: Install/Upgrade block
+  block:
+    - name: Create temporary file for installer
+      ansible.windows.win_tempfile:
+        state: file
+        suffix: temp
+      register: ansible_role_vmware_tools_installer_tempfile
+
+    - name: Download Vmware Tools
+      ansible.windows.win_get_url:
+        url: '{{ ansible_role_vmware_tools_url }}'
+        dest: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
+        timeout: 300
+        checksum: '{{ ansible_role_vmware_tools_installer_sha1sum }}'
+        checksum_algorithm: sha1
+      retries: 10
+      delay: 10
+        
+    - name: Install VMware Tools
+      become: true
+      ansible.windows.win_package:
+        path: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
+        product_id: '{{ ansible_role_vmware_tools_product_id }}'
+        arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL REMOVE={{ ansible_role_vmware_tools_remove_features | join(",")}}"'
+        state: present
+        async: 120
+        poll: 5
+        expected_return_code: [0, 1641, 3010]
+      register: ansible_role_vmware_tools_install
+  
+    - name: Reboot after VMware Tools install if needed
+      become: true
+      ansible.windows.win_reboot:
+        reboot_timeout: 600
+      no_log: false
+      when: ansible_role_vmware_tools_install.reboot_required | bool
+
+    - name: Delete VMware Tools installer
+      ansible.windows.win_file:
+        path: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
+        state: absent
+      no_log: true
+
+    - name: Wait for vmtoolsd processes
+      community.windows.win_wait_for_process:
+        process_name_exact: vmtoolsd
+        process_min_count: 1
+        state: present
+        sleep: 10
+        timeout: 300
+      no_log: true
+  
+  when: not vmwaretoolbox.stat.exists or (vmwaretoolboxversionstring.stdout | length > 0 and ( vmwaretoolboxversionstring.stdout | regex_search('([0-9.]+)\\.[0-9]+ \\(build-([0-9]+)\\).*', '\\1', '\\2') | join('.')) != (ansible_role_vmware_tools_installer_file | regex_search('VMware-tools-([0-9.]+-[0-9]+)-.*', '\\1') | join() | replace('-','.')))

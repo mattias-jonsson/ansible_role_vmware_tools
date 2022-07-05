@@ -1,0 +1,12 @@
+---
+
+- name: Assert that role is executed on a supported Operating System
+  assert:
+    that:
+      - ansible_distribution is search("Microsoft Windows Server 2012") or ansible_distribution is search("Microsoft Windows Server 2016") or ansible_distribution is search("Microsoft Windows Server 2019") or ansible_distribution is search("Microsoft Windows Server 2022")
+    msg: "{{ ansible_distribution }} is not a supported Operating System for this role."
+
+- name: Run install and configure on supported Operating systems.
+  block:
+    - import_tasks: install.yml
+    - import_tasks: configure.yml

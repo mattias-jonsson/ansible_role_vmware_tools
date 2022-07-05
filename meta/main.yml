@@ -1,0 +1,20 @@
+---
+
+collections:
+  - ansible.windows
+  - community.windows
+
+galaxy_info:
+  author: Mattias Jonsson
+  description: Ansible role that installs/upgrades/configures VMware Tools on supported Operating Systems.
+  min_ansible_version: 2.9.27
+  role_name: ansible_role_vmware_tools
+  license: MIT
+  platforms:
+  - name: Windows
+    versions:
+    - "2012"
+    - "2012R2"
+    - "2016"
+    - "2019"
+    - "2022"

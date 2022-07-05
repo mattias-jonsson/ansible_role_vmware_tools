@@ -1,0 +1,9 @@
+---
+
+ansible_role_vmware_tools_installer_file:
+ansible_role_vmware_tools_installer_arch:
+ansible_role_vmware_tools_installer_sha1sum:
+ansible_role_vmware_tools_product_id:
+ansible_role_vmware_tools_remove_features: []
+ansible_role_vmware_tools_time_sync: true
+ansible_role_vmware_tools_url: "https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_installer_file | regex_search('VMware-tools-([0-9.]+)-[0-9]+-.*', '\\1') | join() }}/windows/{{ ansible_role_vmware_tools_installer_arch }}/{{ ansible_role_vmware_tools_installer_file }}"

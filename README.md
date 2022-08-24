@@ -1,55 +1,50 @@
 Ansible Role: ansible_role_vmware_tools
 =========
 
-Ansible role that installs/upgrades/configures VMware Tools on supported Operating Systems.
-
-This role supports the following Operating Systems:
+Installs/upgrades/configures VMware Tools on the following Operating Systems:
 
 <ul>
-<li> Windows Server 2012r2  
-<li> Windows Server 2016  
-<li> Windows Server 2019  
+<li> Windows Server 2012
+<li> Windows Server 2016
+<li> Windows Server 2019
 </ul>
 
 Requirements
 ------------
 
-This role is dependent on the following Ansible Collections:
+This role is dependent on the following Ansible collections:
 
-<ul> 
-<li> ansible.windows
-<li> community.windows
-<ul>
+`ansible.windows`, `community.windows`
 
 Role Variables
 --------------
 
-Available variables are listed below, along with default values where applicable (see defaults/main.yml):
+Available variables are listed below, along with default values where applicable (see `defaults/main.yml`):
 
 
-    ansible_role_vmware_tools_installer_file
+    ansible_role_vmware_tools_installer_file:
 
-Name of installer file as named on https://packages.vmware.com/tools/releases.  
+Name of installer file as named on https://packages.vmware.com/tools/releases
 
-    ansible_role_vmware_tools_installer_arch
+    ansible_role_vmware_tools_installer_arch:
 
-Architecture, acceptable values are x86 or x64.  
+Architecture, acceptable values are x86 or x64.
 
-    ansible_role_vmware_tools_installer_sha1sum
+    ansible_role_vmware_tools_installer_sha1sum:
 
-Sha1sum of installer file.  
+Sha1sum of installer file.
 
-    ansible_role_vmware_tools_product_id
+    ansible_role_vmware_tools_product_id:
 
  Product GUID as seen under HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
 
-    ansible_role_vmware_tools_remove_features
+    ansible_role_vmware_tools_remove_features:
 
-List of VMware Tools features to remove when installing.  
+List of VMware Tools features to remove when installing.
 
-    ansible_role_vmware_tools_time_sync
+    ansible_role_vmware_tools_time_sync: true
 
-Boolean, enable or disable the VMware tools built-in timesync feature, default value is true.
+Boolean, enable or disable the VMware tools built-in timesync feature.
 
 
 Dependencies
@@ -74,7 +69,7 @@ Example Playbook
         ansible_role_vmware_tools_time_sync: true
 
       roles:
-         - role: ansible_role_vmware_tools
+         - ansible_role_vmware_tools
 
 License
 -------

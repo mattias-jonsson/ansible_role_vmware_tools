@@ -40,9 +40,9 @@
         product_id: '{{ ansible_role_vmware_tools_product_id }}'
         arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL REMOVE={{ ansible_role_vmware_tools_remove_features | join(",")}}"'
         state: present
-        async: 120
-        poll: 5
         expected_return_code: [0, 1641, 3010]
+      async: 120
+      poll: 5
       register: ansible_role_vmware_tools_install
   
     - name: Reboot after VMware Tools install if needed

@@ -47,9 +47,10 @@ Example Playbook
     - hosts: servers
 
       vars:
-        ansible_role_vmware_tools_remove_features: 
+        ansible_role_vmware_tools_remove_features:
           - AppDefense
         ansible_role_vmware_tools_time_sync: true
+        ansible_role_vmware_tools_version: '12.1.5'
 
       roles:
          - ansible_role_vmware_tools

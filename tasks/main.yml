@@ -8,5 +8,6 @@
 
 - name: Run install and configure on supported Operating systems.
   block:
+    - import_tasks: check.yml
     - import_tasks: install.yml
     - import_tasks: configure.yml

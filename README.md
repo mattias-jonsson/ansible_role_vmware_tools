@@ -7,6 +7,7 @@ Installs/upgrades/configures VMware Tools on the following Operating Systems:
 <li> Windows Server 2012
 <li> Windows Server 2016
 <li> Windows Server 2019
+<li> Windows Server 2022
 </ul>
 
 Requirements
@@ -22,29 +23,17 @@ Role Variables
 Available variables are listed below, along with default values where applicable (see `defaults/main.yml`):
 
 
-    ansible_role_vmware_tools_installer_file:
+Role Variables
+--------------
 
-Name of installer file as named on https://packages.vmware.com/tools/releases
 
-    ansible_role_vmware_tools_installer_arch:
-
-Architecture, acceptable values are x86 or x64.
-
-    ansible_role_vmware_tools_installer_sha1sum:
-
-Sha1sum of installer file.
-
-    ansible_role_vmware_tools_product_id:
-
- Product GUID as seen under HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
-
-    ansible_role_vmware_tools_remove_features:
-
-List of VMware Tools features to remove when installing.
-
-    ansible_role_vmware_tools_time_sync: true
-
-Boolean, enable or disable the VMware tools built-in timesync feature.
+| Variable | Required | Default | Comments |
+| -------- | -------- | ------- | -------- |
+| `ansible_role_vmware_tools_remove_features` | No | [] | A list of features to remove at installation, Please se VMware Tools documentation for list of features. |
+| `ansible_role_vmware_tools_sha256sums` | No | `defaults/main.yml` contains a list covering some versions  | A list of sha256 checksums for VMware Tools ISO files, format is version-build: sha256sum. Please verify and update this as needed. |
+| `ansible_role_vmware_tools_time_sync` | No | true | Enable timesyncronization through VMware Tools. |
+| `ansible_role_vmware_tools_url` | No | `https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/` | Download URL for VMware Tools ISO files, change this if needed by your environment. |
+| `ansible_role_vmware_tools_version` | Yes | 12.1.5 | Version of VMware Tools to install. |
 
 
 Dependencies
@@ -58,14 +47,8 @@ Example Playbook
     - hosts: servers
 
       vars:
-        ansible_role_vmware_tools_installer_file: VMware-tools-11.3.0-18090558-x86_64.exe
-        ansible_role_vmware_tools_installer_arch: x64
-        ansible_role_vmware_tools_installer_sha1sum: 56ef3c8beb4e3abd2095aade17ccaafc5ac5a132
-        ansible_role_vmware_tools_product_id: '{4FE02FF2-2194-4E1D-8B04-F934655966F9}'
         ansible_role_vmware_tools_remove_features: 
-        - BootCamp
-        - Hgfs
-        - AppDefense
+          - AppDefense
         ansible_role_vmware_tools_time_sync: true
 
       roles:

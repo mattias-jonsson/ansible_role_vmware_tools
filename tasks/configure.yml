@@ -27,4 +27,4 @@
         chdir: '%ProgramFiles%\VMware\VMware Tools'
       when: '"Disabled" not in vmwaretoolboxcmd.stdout_lines and not ansible_role_vmware_tools_time_sync'
 
-  when: vmwaretoolbox.stat.exists
+  when: installed_vmware_tools_version is defined

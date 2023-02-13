@@ -1,44 +1,51 @@
 ---
 
-- name: check if VMware Tools is installed
-  become: true
-  ansible.windows.win_stat:
-    path: '%ProgramFiles%\VMware\VMware Tools\VMwareToolboxCmd.exe'
-  register: vmwaretoolbox
-
-- name: check version of vmware tools
-  become: true
-  ansible.windows.win_command: .\VMwareToolboxCmd.exe -v
-  args:
-    chdir: '%ProgramFiles%\VMware\VMware Tools'
-  register: vmwaretoolboxversionstring
-  changed_when: false
-  when: vmwaretoolbox.stat.exists
 
 - name: Install/Upgrade block
   block:
-    - name: Create temporary file for installer
-      ansible.windows.win_tempfile:
-        state: file
-        suffix: temp
-      register: ansible_role_vmware_tools_installer_tempfile
 
-    - name: Download Vmware Tools
+    - name: Create a temporary directory for download
+      ansible.windows.win_tempfile:
+        state: directory
+      register: vmware_tools_dl_temp
+
+    - name: Download ISO from VMware Tools site
       ansible.windows.win_get_url:
-        url: '{{ ansible_role_vmware_tools_url }}'
-        dest: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
-        timeout: 300
-        checksum: '{{ ansible_role_vmware_tools_installer_sha1sum }}'
-        checksum_algorithm: sha1
+        checksum_algorithm: sha256
+        checksum: "{{ ansible_role_vmware_tools_sha256sums[available_vmware_tools_version|join('-')] }}"
+        url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/{{ vmware_tools_iso_filename | first }}'
+        validate_certs: True
+        dest: '{{ vmware_tools_dl_temp.path }}'
       retries: 10
       delay: 10
-        
+
+    - name: Mount VMware Tools ISO file.
+      community.windows.win_disk_image:
+        image_path: '{{ vmware_tools_dl_temp.path }}\{{ vmware_tools_iso_filename | first }}'
+        state: present
+      register: vmware_tools_iso_mount
+
+    - name: Extract installer files to tempdir
+      ansible.windows.win_command: "{{ 'setup64.exe' if ansible_architecture2 == 'x86_64' else 'setup.exe' }} /A {{ vmware_tools_dl_temp.path }}"
+      args:
+        chdir: '{{ vmware_tools_iso_mount.mount_paths[0] }}'
+
+    - name: Find MSI installer in tempdir
+      ansible.windows.win_find:
+        paths: '{{ vmware_tools_dl_temp.path }}'
+        patterns: '*.msi'
+      register: vm_tools_msi_installer_search
+
+    - name: Set fact for installed VMware Tools version and build.
+      ansible.builtin.set_fact:
+        ansible_role_vmware_tools_productid: "{{ vm_tools_msi_installer_search.files[0].filename|regex_search('{([A-Z0-9-]+)}.msi', '\\1') | first }}"
+
     - name: Install VMware Tools
       become: true
       ansible.windows.win_package:
-        path: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
-        product_id: '{{ ansible_role_vmware_tools_product_id }}'
-        arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL REMOVE={{ ansible_role_vmware_tools_remove_features | join(",")}}"'
+        path: "{{ vmware_tools_iso_mount.mount_paths[0] }}\\{{ 'setup64.exe' if ansible_architecture2 == 'x86_64' else 'setup.exe' }}"
+        product_id: '{{ ansible_role_vmware_tools_productid }}'
+        arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL REMOVE={{ ansible_role_vmware_tools_remove_features | join(", ")}}"'
         state: present
         expected_return_code: [0, 1641, 3010]
       async: 120
@@ -52,12 +59,6 @@
       no_log: false
       when: ansible_role_vmware_tools_install.reboot_required | bool
 
-    - name: Delete VMware Tools installer
-      ansible.windows.win_file:
-        path: '{{ ansible_role_vmware_tools_installer_tempfile.path }}.exe'
-        state: absent
-      no_log: true
-
     - name: Wait for vmtoolsd processes
       community.windows.win_wait_for_process:
         process_name_exact: vmtoolsd
@@ -67,4 +68,14 @@
         timeout: 300
       no_log: true
   
-  when: not vmwaretoolbox.stat.exists or (vmwaretoolboxversionstring.stdout | length > 0 and ( vmwaretoolboxversionstring.stdout | regex_search('([0-9.]+)\\.[0-9]+ \\(build-([0-9]+)\\).*', '\\1', '\\2') | join('.')) != (ansible_role_vmware_tools_installer_file | regex_search('VMware-tools-([0-9.]+-[0-9]+)-.*', '\\1') | join() | replace('-','.')))
+    - name: Unmount VMware Tools ISO file.
+      community.windows.win_disk_image:
+        image_path: '{{ vmware_tools_dl_temp.path }}\{{ vmware_tools_iso_filename | first }}'
+        state: absent
+
+    - name: Delete VMware Tools installer
+      ansible.windows.win_file:
+        path: '{{ vmware_tools_dl_temp.path }}'
+        state: absent
+
+  when: installed_vmware_tools_version is not defined or installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(ansible_role_vmware_tools_version, '<')

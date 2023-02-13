@@ -33,7 +33,7 @@ Role Variables
 | `ansible_role_vmware_tools_sha256sums` | No | `defaults/main.yml` contains a list covering some versions  | A list of sha256 checksums for VMware Tools ISO files, format is version-build: sha256sum. Please verify and update this as needed. |
 | `ansible_role_vmware_tools_time_sync` | No | true | Enable timesyncronization through VMware Tools. |
 | `ansible_role_vmware_tools_url` | No | `https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/` | Download URL for VMware Tools ISO files, change this if needed by your environment. |
-| `ansible_role_vmware_tools_version` | Yes | 12.1.5 | Version of VMware Tools to install. |
+| `ansible_role_vmware_tools_version` | Yes | 12.1.5 | Version of VMware Tools to install. Use `latest` to always install latest available version, make sure that the `ansible_role_vmware_tools_sha256sums` is updated with the sha256 sum of the latest version. |
 
 
 Dependencies

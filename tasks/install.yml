@@ -50,7 +50,7 @@
         expected_return_code: [0, 1641, 3010]
       async: 120
       poll: 5
-      register: ansible_role_vmware_tools_install.
+      register: ansible_role_vmware_tools_install
   
     - name: Reboot after VMware Tools install if needed.
       become: true
@@ -78,4 +78,4 @@
         path: '{{ vmware_tools_dl_temp.path }}'
         state: absent
 
-  when: installed_vmware_tools_version is not defined or installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(ansible_role_vmware_tools_version, '<')
+  when: installed_vmware_tools_version is not defined or installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(available_vmware_tools_version[0], '<')

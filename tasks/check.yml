@@ -14,7 +14,6 @@
   changed_when: false
   when: vmware_tools_install_folder.exists
 
-# TODO make this better with oneliner regex
 - name: Set fact for installed VMware Tools version and build.
   ansible.builtin.set_fact:
     installed_vmware_tools_version:
@@ -33,7 +32,6 @@
     vmware_tools_iso_filename: "{{ vmware_site_http_output.content | regex_search('.*(VMware-tools-windows-[\\d.-]+\\.iso).*', '\\1') }}"
   when: vmware_site_http_output.status_code | int  == 200
 
-# TODO make this better with oneliner regex
 - name: Set fact for installed VMware Tools version and build.
   ansible.builtin.set_fact:
     installed_vmware_tools_version:
@@ -41,7 +39,6 @@
       - "{{ vmware_toolbox_versionstring.stdout_lines[0]|split(' ')|last|regex_search('\\(build-(\\d+)\\)', '\\1')|first }}"
   when: vmware_toolbox_versionstring.stdout | length > 1
 
-# TODO make this better with oneliner regex
 - name: Set fact for available VMware Tools version and build.
   ansible.builtin.set_fact:
     available_vmware_tools_version:

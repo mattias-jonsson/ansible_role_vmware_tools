@@ -6,7 +6,7 @@
     name: InstallPath
   register: vmware_tools_install_folder
 
-- name: check version of VMware Tools
+- name: Check version of VMware Tools.
   ansible.windows.win_command: .\VMwareToolboxCmd.exe -v
   args:
     chdir: '{{ vmware_tools_install_folder.value }}'
@@ -17,14 +17,14 @@
 - name: Set fact for installed VMware Tools version and build.
   ansible.builtin.set_fact:
     installed_vmware_tools_version:
-      - "{{ vmware_toolbox_versionstring.stdout_lines[0]|split(' ')|first|reverse|regex_search('\\d+\\.([\\d+.]+)', '\\1')|first|reverse }}"
-      - "{{ vmware_toolbox_versionstring.stdout_lines[0]|split(' ')|last|regex_search('\\(build-(\\d+)\\)', '\\1')|first }}"
+      - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | first | reverse | regex_search('\\d+\\.([\\d+.]+)', '\\1') | first | reverse }}"
+      - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | last | regex_search('\\(build-(\\d+)\\)', '\\1') | first }}"
   when: vmware_toolbox_versionstring.stdout | length > 1
 
 - name: Get content from VMware website.
   ansible.windows.win_uri:
     url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/'
-    return_content: True
+    return_content: true
   register: vmware_site_http_output
 
 - name: Set fact for filename for VMware Tools iso.
@@ -35,12 +35,12 @@
 - name: Set fact for installed VMware Tools version and build.
   ansible.builtin.set_fact:
     installed_vmware_tools_version:
-      - "{{ vmware_toolbox_versionstring.stdout_lines[0]|split(' ')|first|reverse|regex_search('\\d+\\.([\\d+.]+)', '\\1')|first|reverse }}"
-      - "{{ vmware_toolbox_versionstring.stdout_lines[0]|split(' ')|last|regex_search('\\(build-(\\d+)\\)', '\\1')|first }}"
+      - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | first | reverse | regex_search('\\d+\\.([\\d+.]+)', '\\1') | first | reverse }}"
+      - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | last | regex_search('\\(build-(\\d+)\\)', '\\1') | first }}"
   when: vmware_toolbox_versionstring.stdout | length > 1
 
 - name: Set fact for available VMware Tools version and build.
   ansible.builtin.set_fact:
     available_vmware_tools_version:
-      - "{{ vmware_tools_iso_filename|regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\1')|first }}"
-      - "{{ vmware_tools_iso_filename|regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\2')|first }}"
+      - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\1') | first }}"
+      - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\2') | first }}"

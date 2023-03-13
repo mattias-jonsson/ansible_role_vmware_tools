@@ -1,7 +1,7 @@
 ---
 
 ansible_role_vmware_tools_remove_features: []
-ansible_role_vmware_tools_version: 12.2.0
+ansible_role_vmware_tools_version: "{{ ansible_role_vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"
 ansible_role_vmware_tools_time_sync: true
 ansible_role_vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/'
 ansible_role_vmware_tools_sha256sums:

@@ -1,7 +1,7 @@
 ---
 
 ansible_role_vmware_tools_remove_features: []
-ansible_role_vmware_tools_version: 12.1.5
+ansible_role_vmware_tools_version: 12.2.0
 ansible_role_vmware_tools_time_sync: true
 ansible_role_vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/'
 ansible_role_vmware_tools_sha256sums:
@@ -39,3 +39,4 @@ ansible_role_vmware_tools_sha256sums:
   12.0.6-20104755: 1eba6bfe3221e09f62baad7dba590be1052615b97f641bcb35179f589ef7d3c9
   12.1.0-20219665: 8aa57ea69d542121c9784fcc186365be9cf25a03b01edf761808324d108fd27c
   12.1.5-20735119: 4f704bbb9ced7cc1bf2acf2f4e3d0ee4dbaff915eb9221841df4c72a355e63e8
+  12.2.0-21223074: e936ecd7d254f121be2c42537cfdd53184f7100b5709db2585f0d88798104ecf

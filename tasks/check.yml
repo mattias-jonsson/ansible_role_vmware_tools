@@ -19,7 +19,10 @@
     installed_vmware_tools_version:
       - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | first | reverse | regex_search('\\d+\\.([\\d+.]+)', '\\1') | first | reverse }}"
       - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | last | regex_search('\\(build-(\\d+)\\)', '\\1') | first }}"
-  when: vmware_toolbox_versionstring.stdout | length > 1
+  when:
+    - vmware_tools_install_folder.exists
+    - vmware_toolbox_versionstring.stdout is defined
+    - vmware_toolbox_versionstring.stdout | length > 1
 
 - name: Get content from VMware website.
   ansible.windows.win_uri:
@@ -37,7 +40,10 @@
     installed_vmware_tools_version:
       - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | first | reverse | regex_search('\\d+\\.([\\d+.]+)', '\\1') | first | reverse }}"
       - "{{ vmware_toolbox_versionstring.stdout_lines[0] | split(' ') | last | regex_search('\\(build-(\\d+)\\)', '\\1') | first }}"
-  when: vmware_toolbox_versionstring.stdout | length > 1
+  when:
+    - vmware_tools_install_folder.exists
+    - vmware_toolbox_versionstring.stdout is defined
+    - vmware_toolbox_versionstring.stdout | length > 1
 
 - name: Set fact for available VMware Tools version and build.
   ansible.builtin.set_fact:

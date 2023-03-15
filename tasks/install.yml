@@ -7,6 +7,30 @@
     installed_vmware_tools_version is defined installed_vmware_tools_version[0] is version(available_vmware_tools_version[0], '<')
   block:
 
+
+    - name: Pre VMware Tools for Windows Server 2012r2
+      block:
+        - name: Install hotfixes for VMware Tools compatibility on Windows 2012x
+          ansible.windows.win_updates:
+            accept_list:
+              - KB2919355
+              - KB2932046
+              - KB2959977
+              - KB2937592
+              - KB2938439
+              - KB2934018
+              - KB2939087
+            reboot: yes
+            reboot_timeout: 3600
+            server_selection: windows_update
+            state: installed
+
+        - name: Reboot after updates
+          ansible.windows.win_reboot:
+            post_reboot_delay: 120
+      when: ansible_distribution is search("Microsoft Windows Server 2012 R2")
+
+
     - name: Create a temporary directory for download.
       ansible.windows.win_tempfile:
         state: directory

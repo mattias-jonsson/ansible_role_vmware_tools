@@ -50,7 +50,7 @@ Example Playbook
         ansible_role_vmware_tools_remove_features:
           - AppDefense
         ansible_role_vmware_tools_time_sync: true
-        ansible_role_vmware_tools_version: '12.2.5'
+        ansible_role_vmware_tools_version: '12.3.0'
 
       roles:
          - ansible_role_vmware_tools

@@ -4,9 +4,8 @@
 - name: Install/Upgrade block.
   when: >
     installed_vmware_tools_version is not defined or
-    installed_vmware_tools_version is defined installed_vmware_tools_version[0] is version(available_vmware_tools_version[0], '<')
+    (installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(available_vmware_tools_version[0], '<'))
   block:
-
 
     - name: Pre VMware Tools for Windows Server 2012r2
       block:

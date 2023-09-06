@@ -71,11 +71,7 @@
       ansible.windows.win_package:
         path: "{{ vmware_tools_iso_mount.mount_paths[0] }}\\{{ 'setup64.exe' if ansible_architecture2 == 'x86_64' else 'setup.exe' }}"
         product_id: '{{ ansible_role_vmware_tools_productid }}'
-        arguments: >
-          /S /v "/qn REBOOT=R ADDLOCAL=ALL
-          {% if ansible_role_vmware_tools_remove_features|length > 0 %}
-          REMOVE={{ ansible_role_vmware_tools_remove_features | join(', ') }}
-          {% endif %}"
+        arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL {% if ansible_role_vmware_tools_remove_features|length > 0 %}REMOVE={{ ansible_role_vmware_tools_remove_features | join(", "){% endif %} }}"'
         state: present
         expected_return_code: [0, 1641, 3010]
       async: 120

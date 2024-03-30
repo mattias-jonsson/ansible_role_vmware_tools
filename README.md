@@ -47,7 +47,7 @@ Example Playbook
     vmware_tools_version: '12.4.0'
 
   roles:
-      - ansible_role_vmware_tools
+      - vmware_tools
 ```
 
 License

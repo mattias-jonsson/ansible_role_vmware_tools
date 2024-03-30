@@ -1,9 +1,8 @@
 ---
 
 - name: Configure VMware Tools timesync.
-  when: installed_vmware_tools_version is defined
+  when: installed_vmware_tools_version is defined or vmware_tools_install.changed
   block:
-
     - name: Read current VMware Tools timesync setting.
       become: true
       ansible.windows.win_command: .\VMwareToolboxCmd.exe timesync status
@@ -14,16 +13,11 @@
       failed_when: ("Enabled" not in vmwaretoolboxcmd.stdout_lines) and
                     ("Disabled" not in vmwaretoolboxcmd.stdout_lines)
 
-    - name: Enable VMware Tools timesync.
+    - name: Configure VMware Tools timesync function to be {{ 'enabled' if vmware_tools_time_sync else 'disabled' }}.
       become: true
-      ansible.windows.win_command: .\VMwareToolboxCmd.exe timesync enable
+      ansible.windows.win_command: .\VMwareToolboxCmd.exe timesync "{{ 'enable' if vmware_tools_time_sync else 'disable' }}"
       args:
         chdir: '%ProgramFiles%\VMware\VMware Tools'
-      when: '"Enabled" not in vmwaretoolboxcmd.stdout_lines and ansible_role_vmware_tools_time_sync'
-
-    - name: Disable VMware Tools timesync.
-      become: true
-      ansible.windows.win_command: .\VMwareToolboxCmd.exe timesync disable
-      args:
-        chdir: '%ProgramFiles%\VMware\VMware Tools'
-      when: '"Disabled" not in vmwaretoolboxcmd.stdout_lines and not ansible_role_vmware_tools_time_sync'
+      when: >
+        (vmware_tools_time_sync and 'Enabled' not in vmwaretoolboxcmd.stdout_lines) or
+        (not vmware_tools_time_sync and 'Disabled' not in vmwaretoolboxcmd.stdout_lines)

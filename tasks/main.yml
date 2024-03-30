@@ -3,18 +3,24 @@
 - name: Assert that role is executed on a supported Operating System
   ansible.builtin.assert:
     that: >
-      ansible_distribution is search("Microsoft Windows Server 2012") or ansible_distribution is search("Microsoft Windows Server 2016")
-      or ansible_distribution is search("Microsoft Windows Server 2019") or ansible_distribution is search("Microsoft Windows Server 2022")
+      ansible_distribution is search("Microsoft Windows Server 2016") or
+      ansible_distribution is search("Microsoft Windows Server 2019") or
+      ansible_distribution is search("Microsoft Windows Server 2022") or
+      ansible_distribution is search("Microsoft Windows 10") or
+      ansible_distribution is search("Microsoft Windows 11")
     msg: "{{ ansible_distribution }} is not a supported Operating System for this role."
 
 - name: Run install and configure on supported Operating systems.
   block:
     - name: Include check tasks.
-      ansible.builtin.import_tasks:
+      ansible.builtin.include_tasks:
         file: check.yml
     - name: Include install tasks.
-      ansible.builtin.import_tasks:
+      ansible.builtin.include_tasks:
         file: install.yml
+      when: >
+        installed_vmware_tools_version is not defined or
+        (installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(vmware_tools_version, '<'))
     - name: Include configure tasks.
-      ansible.builtin.import_tasks:
+      ansible.builtin.include_tasks:
         file: configure.yml

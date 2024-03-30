@@ -1,0 +1,75 @@
+---
+
+argument_specs:
+  main:
+    short_description: This Ansible role installs, upgrades, and configures VMware Tools on Windows Server 2016, 2019, and 2022.
+    options:
+      vmware_tools_remove_features:
+        description:
+          - "A list of VMware Tools features to remove during installation. Check VMware Tools documentation for a comprehensive list of removable features."
+        required: false
+        default: '[]'
+        type: list
+      vmware_tools_sha256sums:
+        description:
+          - "A map of SHA256 checksums for verifying the integrity of VMware Tools ISO files. Format: version-build: sha256sum."
+        required: false
+        type: dict
+        default:
+          10.0.0-3000743: 313c7c06ab548272698c728270be5fbe156bbd81e9f1d3638ff98b38a86f8f6d
+          10.0.5-3227872: b0682994a044cd0ce1b54a6c87a37b760c7b6d2f312c475b8596046c4f00d66b
+          10.0.6-3560309: 5fb53ec659cccbbc4d9a0b36728f959373897f6b935ef1c1e536e2e956fc561d
+          10.0.8-3746311: f69b2f027141e5ac97a312210ad05d8020aecb21e2913c6b0a32aaade64c3875
+          10.0.9-3917699: 1c2c11e752ec59b127e51c140c19adc36298bfbc816cccfea94d31362a5f93ba
+          10.0.12-4448496: aab73d3ef4668beec725541c08c41042bb22fc86cd5563310fc170b952631d8a
+          10.1.0-4449150: 962f8eedf30babdee680b9c401145a2ca04d3999def950bd3d0628dcfe16bab0
+          10.1.5-5055683: 4860ee086ebb06c99d2d0e8586b8fd66943351041eadcab94e39c1e27a350ed7
+          10.1.7-5541682: c6d1da22b160b057b94ffab81b8fad307c1601a37350e78f29dccf3a098be522
+          10.1.10-6082533: ce8c0ab3473f01c8b8c03f767627ed78343b8b8def957894d1eb273fa4ad2bbc
+          10.1.15-6677369: 8b3f1ed6c69eddfe8380615a3f58a701d6630303cf7735f8377308a44f153c13
+          10.2.1-8267844: 149ca104357e579ef6d3b53b779f9bda1cf54731e66b3881f59615a3d9cd1bfb
+          10.2.5-8068406: 3b8f9d6e43f5d1dff0576cb93d008c14e0434d7233872f6c63988513d2bda5d1
+          10.3.2-9925305: a79c192ef59b634cd4f2214e9bb3d3005486ed60086be087b2383f20edb06f8f
+          10.3.5-10430147: fde918a5a315650c183f363b5b3f6121814d71828008b086003013c9ed8c93e4
+          10.3.10-12406962: edb889e6cce11aeb568dbf471cee1b3dc26ca72bc671b660ad4872911edbf6da
+          11.0.0-14549434: 059a46c9a0a82939d645bafd73eb9d499eb667b7eda40915a079e0529126b2fc
+          11.0.1-14773994: d4aff99bb1c8ccd9ed58a6789740946a0f0d246581b22ccb037ca82c683b02bb
+          11.0.5-15389592: 89bb1e62106c281cf28a7497f74e7980eff476b41085716f9dd73517ed3b2db4
+          11.0.6-15940789: 8f1cc3181055891b98672f715e0ca7bbe4018960eae945d7a4b9f640c44c3d79
+          11.1.0-16036546: 65ff7cd2a3904642a77228d73aff28b04c1721f5826aa1c0415acb067b58f976
+          11.1.1-16303738: 384055363f915818f7813397eeec9377f35c9ddc1b87627ed732af61d9441bcf
+          11.1.5-16724464: 031730746e5a45da10f9b92bf7ca31d93d94243b1485c7deab1c07d083137087
+          11.2.0-16938113: 8fc95a35198b88914d436d73774fb5a08db8479b83705bba270f3ee3758ee400
+          11.2.1-17243207: 2914ad734ab7cbc217863f196ca417d6733a47104358156fc7e3d175a4409dca
+          11.2.5-17337674: 67aba9eff5365fbecbaf960025350f4304bb480235ef0851bc0cddcda411c371
+          11.2.6-17901274: cf0b98f630f614d708bbd359840472c9576797a7cd8cfd6f47797edb14de6ffb
+          11.3.0-18090558: cbf7e54fa69b2752bb946df67a004566ab47a3e0f7058b57f04cfe68f6eaad0e
+          11.3.5-18557794: 4a4dc1e8d0ef68e4f85c7402f0b205e5998a6d7f1a318a32c9c0c6e6ac4ad222
+          12.0.0-19345655: 2597fb2adf3b74ed68bdb750c7029ef15109f212a398c1dd7333ca23fd3f73f4
+          12.0.5-19716617: 64b584b67781d891c58d17f87cc7a99e1d6255f830cf2661c8a57c19df5f743d
+          12.0.6-20104755: 1eba6bfe3221e09f62baad7dba590be1052615b97f641bcb35179f589ef7d3c9
+          12.1.0-20219665: 8aa57ea69d542121c9784fcc186365be9cf25a03b01edf761808324d108fd27c
+          12.1.5-20735119: 4f704bbb9ced7cc1bf2acf2f4e3d0ee4dbaff915eb9221841df4c72a355e63e8
+          12.2.0-21223074: e936ecd7d254f121be2c42537cfdd53184f7100b5709db2585f0d88798104ecf
+          12.2.5-21855600: 86675d7de764fc829607588ea49896085df3c7c21254e31a227cd91bb55ede0a
+          12.3.0-22234872: 532a3edf4faccdc93355c9810385c320d152ce8cf5ebed35a8bd45c4ce90029b
+          12.3.5-22544099: 5ad9136dfdf1a4df5bc0da9b7b273e9b0f19b2ed81da0d3df59adc28e247ab2b
+          12.4.0-23259341: 330fa0edbffc6a455cb5df03546f174b9c9c5763a8a1d95829c2b09b0b89fbed
+      vmware_tools_time_sync:
+        description:
+          - "Enables or disables time synchronization between the VMware guest and host. Setting to false disables synchronization."
+        required: false
+        default: true
+        type: bool
+      vmware_tools_url:
+        description:
+          - "The URL from which VMware Tools ISO files are downloaded. This URL should follow the same structural format as the official VMware download site to ensure compatibility. "
+        required: false
+        default: "https://packages.vmware.com/tools/releases/{{ vmware_tools_version }}/windows/"
+        type: str
+      vmware_tools_version:
+        description:
+          - "`Latest version based on vmware_tools_sha256sums` | Specifies the version of VMware Tools to install. Ensure vmware_tools_sha256sums includes the checksum for the version you intend to install."
+        required: false
+        default: "{{ vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"
+        type: str

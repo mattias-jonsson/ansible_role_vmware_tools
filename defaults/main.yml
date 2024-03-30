@@ -1,10 +1,10 @@
 ---
 
-ansible_role_vmware_tools_remove_features: []
-ansible_role_vmware_tools_version: "{{ ansible_role_vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"
-ansible_role_vmware_tools_time_sync: true
-ansible_role_vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/'
-ansible_role_vmware_tools_sha256sums:
+vmware_tools_remove_features: []
+vmware_tools_version: "{{ vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"
+vmware_tools_time_sync: true
+vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ vmware_tools_version }}/windows/'
+vmware_tools_sha256sums:
   10.0.0-3000743: 313c7c06ab548272698c728270be5fbe156bbd81e9f1d3638ff98b38a86f8f6d
   10.0.5-3227872: b0682994a044cd0ce1b54a6c87a37b760c7b6d2f312c475b8596046c4f00d66b
   10.0.6-3560309: 5fb53ec659cccbbc4d9a0b36728f959373897f6b935ef1c1e536e2e956fc561d

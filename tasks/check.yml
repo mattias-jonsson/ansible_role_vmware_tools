@@ -24,19 +24,24 @@
     - vmware_toolbox_versionstring.stdout is defined
     - vmware_toolbox_versionstring.stdout | length > 1
 
-- name: Get content from VMware website.
-  ansible.windows.win_uri:
-    url: 'https://packages.vmware.com/tools/releases/{{ ansible_role_vmware_tools_version }}/windows/'
-    return_content: true
-  register: vmware_site_http_output
+- name: Block for getting content from VMware Tools URL
+  when: >
+    installed_vmware_tools_version is not defined or
+    (installed_vmware_tools_version is defined and installed_vmware_tools_version[0] is version(vmware_tools_version, '<'))
+  block:
+    - name: Get content from {{ vmware_tools_url }}.
+      ansible.windows.win_uri:
+        url: '{{ vmware_tools_url }}'
+        return_content: true
+      register: vmware_site_http_output
 
-- name: Set fact for filename for VMware Tools iso.
-  ansible.builtin.set_fact:
-    vmware_tools_iso_filename: "{{ vmware_site_http_output.content | regex_search('.*(VMware-tools-windows-[\\d.-]+\\.iso).*', '\\1') }}"
-  when: vmware_site_http_output.status_code | int  == 200
+    - name: Set fact for filename for VMware Tools iso.
+      ansible.builtin.set_fact:
+        vmware_tools_iso_filename: "{{ vmware_site_http_output.content | regex_search('.*(VMware-tools-windows-[\\d.-]+\\.iso).*', '\\1') }}"
+      when: vmware_site_http_output.status_code | int  == 200
 
-- name: Set fact for available VMware Tools version and build.
-  ansible.builtin.set_fact:
-    available_vmware_tools_version:
-      - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\1') | first }}"
-      - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\2') | first }}"
+    - name: Set fact for available VMware Tools version and build.
+      ansible.builtin.set_fact:
+        available_vmware_tools_version:
+          - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\1') | first }}"
+          - "{{ vmware_tools_iso_filename | regex_search('VMware-tools-windows-([\\d.]+)-(\\d+).iso', '\\2') | first }}"

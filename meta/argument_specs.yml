@@ -2,7 +2,7 @@
 
 argument_specs:
   main:
-    short_description: This Ansible role installs, upgrades, and configures VMware Tools on Windows Server 2016, 2019, and 2022.
+    short_description: This Ansible role installs, upgrades, and configures VMware Tools on Windows Server 2016, 2019, and 2022, Windows 10 and Windows 11.
     options:
       vmware_tools_remove_features:
         description:

@@ -1,0 +1,2 @@
+---
+vmware_tools_installer_bin_name: "{{ 'setup64.exe' if '64' in ansible_architecture and vmware_tools_version is version('12.5.0', '<') else 'setup.exe' }}"

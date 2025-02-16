@@ -55,6 +55,8 @@ argument_specs:
           12.3.0-22234872: 532a3edf4faccdc93355c9810385c320d152ce8cf5ebed35a8bd45c4ce90029b
           12.3.5-22544099: 5ad9136dfdf1a4df5bc0da9b7b273e9b0f19b2ed81da0d3df59adc28e247ab2b
           12.4.0-23259341: 330fa0edbffc6a455cb5df03546f174b9c9c5763a8a1d95829c2b09b0b89fbed
+          12.4.5-23787635: a16c79dfa7dea79410d7e1b4221a52cf945138767a2ec0d4dcdafa2594b7caec
+          12.5.0-24276846: 4f49bffef9208adc8b53f26c3d4bc021e389e28b7f7d7a2d5959cdd06e73d347
       vmware_tools_time_sync:
         description:
           - "Enables or disables time synchronization between the VMware guest and host. Setting to false disables synchronization."

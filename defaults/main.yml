@@ -1,9 +1,6 @@
 ---
 
 vmware_tools_remove_features: []
-vmware_tools_version: "{{ vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"
-vmware_tools_time_sync: true
-vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ vmware_tools_version }}/windows/'
 vmware_tools_sha256sums:
   10.0.0-3000743: 313c7c06ab548272698c728270be5fbe156bbd81e9f1d3638ff98b38a86f8f6d
   10.0.5-3227872: b0682994a044cd0ce1b54a6c87a37b760c7b6d2f312c475b8596046c4f00d66b
@@ -44,3 +41,8 @@ vmware_tools_sha256sums:
   12.3.0-22234872: 532a3edf4faccdc93355c9810385c320d152ce8cf5ebed35a8bd45c4ce90029b
   12.3.5-22544099: 5ad9136dfdf1a4df5bc0da9b7b273e9b0f19b2ed81da0d3df59adc28e247ab2b
   12.4.0-23259341: 330fa0edbffc6a455cb5df03546f174b9c9c5763a8a1d95829c2b09b0b89fbed
+  12.4.5-23787635: a16c79dfa7dea79410d7e1b4221a52cf945138767a2ec0d4dcdafa2594b7caec
+  12.5.0-24276846: 4f49bffef9208adc8b53f26c3d4bc021e389e28b7f7d7a2d5959cdd06e73d347
+vmware_tools_time_sync: true
+vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ vmware_tools_version }}/windows/'
+vmware_tools_version: "{{ vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"

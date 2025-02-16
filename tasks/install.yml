@@ -22,7 +22,7 @@
   register: vmware_tools_iso_mount
 
 - name: Extract installer files to tempdir.
-  ansible.windows.win_command: "{{ 'setup64.exe' if ansible_architecture2 == 'x86_64' else 'setup.exe' }} /A {{ vmware_tools_dl_temp.path }}"
+  ansible.windows.win_command: "{{ vmware_tools_installer_bin_name }} /A {{ vmware_tools_dl_temp.path }}"
   args:
     chdir: '{{ vmware_tools_iso_mount.mount_paths[0] }}'
 
@@ -36,10 +36,10 @@
   ansible.builtin.set_fact:
     vmware_tools_productid: "{{ vm_tools_msi_installer_search.files[0].filename | regex_search('{([A-Z0-9-]+)}.msi', '\\1') | first }}"
 
-- name: Install VMware Tools (version {{ vmware_tools_version }}).
+- name: Install VMware Tools (version {{ vmware_tools_version }}) using {{ vmware_tools_installer_bin_name }}.
   become: true
   ansible.windows.win_package:
-    path: "{{ vmware_tools_iso_mount.mount_paths[0] }}\\{{ 'setup64.exe' if ansible_architecture2 == 'x86_64' else 'setup.exe' }}"
+    path: "{{ vmware_tools_iso_mount.mount_paths[0] }}\\{{ vmware_tools_installer_bin_name }}"
     product_id: '{{ vmware_tools_productid }}'
     arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL {% if vmware_tools_remove_features|length > 0 %}REMOVE={{ vmware_tools_remove_features | join(", ") }}{% endif %}"'
     state: present

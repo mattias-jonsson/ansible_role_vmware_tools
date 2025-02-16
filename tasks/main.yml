@@ -2,13 +2,17 @@
 
 - name: Assert that role is executed on a supported Operating System
   ansible.builtin.assert:
-    that: >
-      ansible_distribution is search("Microsoft Windows Server 2016") or
-      ansible_distribution is search("Microsoft Windows Server 2019") or
-      ansible_distribution is search("Microsoft Windows Server 2022") or
-      ansible_distribution is search("Microsoft Windows 10") or
-      ansible_distribution is search("Microsoft Windows 11")
-    msg: "{{ ansible_distribution }} is not a supported Operating System for this role."
+    that:
+      - ansible_distribution is search("Microsoft Windows Server 2016") or
+        ansible_distribution is search("Microsoft Windows Server 2019") or
+        ansible_distribution is search("Microsoft Windows Server 2022") or
+        ansible_distribution is search("Microsoft Windows Server 2025") or
+        ansible_distribution is search("Microsoft Windows 10") or
+        ansible_distribution is search("Microsoft Windows 11")
+      - "'64' in ansible_architecture"
+    msg: "{{ ansible_distribution }} {{ ansible_architecture }} is not a supported Operating System for this role."
+    quiet: true
+
 
 - name: Run install and configure on supported Operating systems.
   block:

@@ -44,6 +44,7 @@ vmware_tools_sha256sums:
   12.4.5-23787635: a16c79dfa7dea79410d7e1b4221a52cf945138767a2ec0d4dcdafa2594b7caec
   12.5.0-24276846: 4f49bffef9208adc8b53f26c3d4bc021e389e28b7f7d7a2d5959cdd06e73d347
   12.5.1-24649672: 95c4ae941a218bf675cdd56cd1eed9d526c8af7ad97fa77215c4a461fb74035b
+  12.5.2-24697584: 119cb2892218bc0d287b269d1a40810109697b137c9c2acf95b2bc1c89e19912
 vmware_tools_time_sync: true
 vmware_tools_url: 'https://packages.vmware.com/tools/releases/{{ vmware_tools_version }}/windows/'
 vmware_tools_version: "{{ vmware_tools_sha256sums | last | ansible.builtin.split('-') | first }}"

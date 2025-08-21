@@ -44,7 +44,7 @@
     arguments: ' /S /v "/qn REBOOT=R ADDLOCAL=ALL {% if vmware_tools_remove_features|length > 0 %}REMOVE={{ vmware_tools_remove_features | join(", ") }}{% endif %}"'
     state: present
     expected_return_code: [0, 1641, 3010]
-  async: 120
+  async: 300
   poll: 5
   register: vmware_tools_install
 
